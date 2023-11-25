@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+            <!-- Compiled and minified CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+        <!-- Compiled and minified JavaScript -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+            
+        <script src="someCode.js" type="text/javascript" defer></script>
+    </head>
+    <body>
+        <nav>
+            <div class="nav-wrapper pink section">
+                Logo
+                <ul class="right hide-on-med-and-down">
+                    <li>Sass </li>
+                    <li>Components </li>
+                    <li>JavaScript </li>
+                </ul>
+            </div>
+        </nav>
+        <div class="container">
+            <div id="rec" class="col"></div>
+            <div id="add-rec" class="col">
+                <input type="file" id="image-input" accept="image/png, image/jpeg" multiple/>
+                <input type="text" id="name-text">
+                <h4>Ingredients</h4>
+                <textarea id="ingredients-text"></textarea>
+                <button id="add-ingredient" type="button" class="btn">Add ingredient</button>
+                <h4>Instructions</h4>
+                <textarea id="instructions-text"></textarea>
+                <button id="add-instruction" type="button" class="btn">Add instruction</button>
+                <button id="submit" type="submit" class="btn">Submit</button>
+            </div>
+        </div>
+    </body>
+</html>
