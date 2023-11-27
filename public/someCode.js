@@ -127,20 +127,17 @@ if (document.readyState !== "loading") {
     instr = [];
     ingr = [];
     const formData = new FormData();
-    formData.append("images",save[0]);
-    // console.log(save[0]);
-    // console.log("Here");
-    // console.log(save[0].name);
-    // let imgToSend = {
-    //   name: save[0].name,
-    //   buffer: save[0].buffer,
-    //   mimetype: save[0].type,
-    //   encoding: save[0].encoding
-    // }
-    // console.log(imgToSend);
+    formData.append("name", "smth");
+    console.log("Hereeeeeeeeeeee");
+    console.log(save);
+    formData.append("images", save[0]);
+    console.log(formData);
     fetch("http://localhost:3000/images", {
             method: "post",
-            body: formData
+            body: formData,
+            header: {
+              "Content-Type": "multipart/form-data"
+            }
         })
         .then((res) => {
           console.log(res)
@@ -157,7 +154,7 @@ if (document.readyState !== "loading") {
     //   mimetype: files[0].type,
     //   encoding: encoding
     // }
-    // console.log(imgToSend);
+    console.log(files);
     save.push(files[0]);
     console.log(save);
   })

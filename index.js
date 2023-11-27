@@ -19,8 +19,8 @@ const db = mongoose.connection;
 db.on("error", console.error.bind(console, "MongoDB connection error"));
 // let listValue = [];
 const images = [];
-app.use(bodyParser.json()) ;
-app.use(bodyParser.urlencoded({ extended: true })) ;
+app.use(express.json()) ;
+app.use(express.urlencoded({ extended: true })) ;
 
 // app.get('/', (req, res) => {
 //     res.sendFile(__dirname + '/index.html');
@@ -65,22 +65,24 @@ app.post("/recipe/", (req, res, next) => {
     });
 })
 
-app.post("/images", upload.single('uploaded_file'), function (req, res) {
+app.post("/images", upload.array("images"), uploadFiles);
+function uploadFiles(req, res) {
     // req.file is the name of your file in the form above, here 'uploaded_file'
     // req.body will hold the text fields, if there were any 
-    let imgToSend = {
-      name: req.file.fieldname,
-      buffer: req.file.buffer,
-      mimetype: req.file.type,
-      encoding: req.file.encoding
-    }
-    console.log(imgToSend);
-    console.log(req.file, req.body) 
+    // let imgToSend = {
+    //   name: req.file.fieldname,
+    //   buffer: req.file.buffer,
+    //   mimetype: req.file.type,
+    //   encoding: req.file.encoding
+    // }
+    console.log(req.body);
+    console.log("Hereeeeeeeeeeee");
+    console.log(req.files);
     // (req, res) => {
     // images.push(req.body)
     // console.log(req.body);
     // res.send("Hi");
-})
+}
 
 
 app.listen(port, () => console.log("Server listen"))
