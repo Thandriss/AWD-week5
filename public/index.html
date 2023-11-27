@@ -7,24 +7,27 @@
         <!-- Compiled and minified JavaScript -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-            
+        <script src="https://unpkg.com/detect-file-encoding-and-language/umd/language-encoding.min.js"></script>
         <script src="someCode.js" type="text/javascript" defer></script>
     </head>
     <body>
         <nav>
-            <div class="nav-wrapper pink section">
-                Logo
-                <ul class="right hide-on-med-and-down">
-                    <li>Sass </li>
-                    <li>Components </li>
-                    <li>JavaScript </li>
-                </ul>
+            <div class="nav-wrapper pink">
+                <form class="col m3" id="form">
+                    <p class="left">Logo</p>
+                    <div class="input-field right" style="max-width: 200pt;">
+                        <input id="search" type="search">
+                        <label class="label-icon" for="search"><i class="material-icons">search</i></label>
+                    </div>
+                </form>
             </div>
         </nav>
         <div class="container">
             <div id="rec" class="col"></div>
             <div id="add-rec" class="col">
-                <input type="file" id="image-input" accept="image/png, image/jpeg" multiple/>
+                <form enctype="multipart/form-data">
+                    <input type="file" id="image-input" accept="image/png, image/jpeg" name="uploaded_file"/>
+                </form>
                 <input type="text" id="name-text">
                 <h4>Ingredients</h4>
                 <textarea id="ingredients-text"></textarea>
@@ -32,6 +35,7 @@
                 <h4>Instructions</h4>
                 <textarea id="instructions-text"></textarea>
                 <button id="add-instruction" type="button" class="btn">Add instruction</button>
+                <div id="categ"></div>
                 <button id="submit" type="submit" class="btn">Submit</button>
             </div>
         </div>
