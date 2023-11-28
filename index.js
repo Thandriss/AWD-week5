@@ -70,53 +70,31 @@ app.post("/recipe/", (req, res, next) => {
 
 app.post("/images", upload.array("images"), uploadFiles);
 
-function uploadFiles(req, res) {
+async function uploadFiles(req, res) {
     let imgToSend = {
         name: req.files[0].originalname,
         buffer: req.files[0].buffer.toString('binary'),
         mimetype: req.files[0].mimetype,
         encoding: req.files[0].encoding
     }
-    // console.log(req.body);
-    // console.log("Hereeeeeeeeeeee");
-    // console.log(req.files[0]);
-    let idToSend = [];
-    // let newObj = new Img(imgToSend).save();
-    // console.log(newObj._id);
-    // let toSend = {
-    //     "id": newObj._id
-    // };
-    // console.log(newObj._id);
-    // res.send(toSend);
-    // // newObj
-    Img.create(imgToSend)
-    .then(result => {
-        idToSend.push(result._id.toString());
-        // let toSend = {
-        //     "id": idToSend[0]
-        // };
-        // res.send(toSend);
-        console.log(idToSend);
-    });
-    console.log("idToSend");
-    console.log(idToSend);
+    // let idToSend = [];
+    let saved = await Img.create(imgToSend)
     let toSend = {
-        "id": idToSend[0]
+        id: saved._id
     };
-    console.log(toSend);
     console.log("Hereeeeeeeeeeee");
     console.log(toSend);
-    res.send(toSend);
+    // console.log(res);
+    return res.send(toSend);
+    // console.log(toSend);
+    // return res
+    
     // new Img({
     //     name: req.files[0].originalname,
     //     buffer: req.files[0].buffer.toString('binary'),
     //     mimetype: req.files[0].mimetype,
     //     encoding: req.files[0].encoding
     // }).save();
-    // console.log("Hereeeeeeeeeeee");
-    // var img_id = Img.find({name: req.files[0].originalname})
-    // console.log(toSend);
-    // console.log("Hereeeeeeeeeeee");
 }
 
 
