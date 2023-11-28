@@ -97,6 +97,24 @@ if (document.readyState !== "loading") {
   let save = [];
 
   sub.addEventListener("click", function() {
+    const formData = new FormData();
+    formData.append("name", "smth");
+    console.log("Hereeeeeeeeeeee");
+    console.log(save);
+    formData.append("images", save[0]);
+    console.log(formData);
+    let img_id = [];
+    fetch("http://localhost:3000/images", {
+            method: "post",
+            body: formData,
+            header: {
+              "Content-Type": "multipart/form-data"
+            }
+        })
+        .then(resJs => {
+          console.log(resJs.id);
+          img_id.push(resJs.id);
+        })
     let ids = [];
     console.log(ind);
     for(let i = 0; i<ind; i++) {
@@ -110,7 +128,8 @@ if (document.readyState !== "loading") {
       name: nameDish.value, 
       instructions: instr,
       ingredients: ingr,
-      categories: ids
+      categories: ids,
+      images: img_id 
     }
     fetch("http://localhost:3000/recipe/", {
             method: "post",
@@ -126,22 +145,6 @@ if (document.readyState !== "loading") {
         // })
     instr = [];
     ingr = [];
-    const formData = new FormData();
-    formData.append("name", "smth");
-    console.log("Hereeeeeeeeeeee");
-    console.log(save);
-    formData.append("images", save[0]);
-    console.log(formData);
-    fetch("http://localhost:3000/images", {
-            method: "post",
-            body: formData,
-            header: {
-              "Content-Type": "multipart/form-data"
-            }
-        })
-        .then((res) => {
-          console.log(res)
-        })
   })
 
   imgIn.addEventListener("change", event => {

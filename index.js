@@ -10,7 +10,9 @@ const Recipes = require("./models/Recipes");
 const Cat = require("./models/Category");
 const Img = require("./models/Images");
 const multer  = require('multer')
-const upload = multer({ dest: './public/data/uploads/' })
+const storage = multer.memoryStorage()
+const upload = multer({ storage: storage })
+// const upload = multer({ dest: './public/data/uploads/' })
 mongoose.connect(mongoDB);
 console.log(mongoose.connection.readyState);
 console.log("CONNECT");
@@ -41,13 +43,13 @@ console.log(mongoose.connection.readyState);
 app.get("/categories", (req, res) =>{
     Cat.find({})
     .then(result => {
-        console.log(result);
+        // console.log(result);
         return res.json(result);
     })
 })
 
 app.post("/recipe/", (req, res, next) => {
-    console.log(req.body);
+    // console.log(req.body);
     Recipes.findOne({name: req.body.name})
     .then((name) =>{
         if(!name) {
@@ -55,7 +57,8 @@ app.post("/recipe/", (req, res, next) => {
                 name: req.body.name,
                 instructions: req.body.instructions,
                 ingredients: req.body.ingredients,
-                categories: req.body.categories
+                categories: req.body.categories,
+                images: req.body.images
             }).save()
         } else {
             return res.status(403).send("Have this recipe");
@@ -66,22 +69,54 @@ app.post("/recipe/", (req, res, next) => {
 })
 
 app.post("/images", upload.array("images"), uploadFiles);
+
 function uploadFiles(req, res) {
-    // req.file is the name of your file in the form above, here 'uploaded_file'
-    // req.body will hold the text fields, if there were any 
-    // let imgToSend = {
-    //   name: req.file.fieldname,
-    //   buffer: req.file.buffer,
-    //   mimetype: req.file.type,
-    //   encoding: req.file.encoding
-    // }
-    console.log(req.body);
-    console.log("Hereeeeeeeeeeee");
-    console.log(req.files);
-    // (req, res) => {
-    // images.push(req.body)
+    let imgToSend = {
+        name: req.files[0].originalname,
+        buffer: req.files[0].buffer.toString('binary'),
+        mimetype: req.files[0].mimetype,
+        encoding: req.files[0].encoding
+    }
     // console.log(req.body);
-    // res.send("Hi");
+    // console.log("Hereeeeeeeeeeee");
+    // console.log(req.files[0]);
+    let idToSend = [];
+    // let newObj = new Img(imgToSend).save();
+    // console.log(newObj._id);
+    // let toSend = {
+    //     "id": newObj._id
+    // };
+    // console.log(newObj._id);
+    // res.send(toSend);
+    // // newObj
+    Img.create(imgToSend)
+    .then(result => {
+        idToSend.push(result._id.toString());
+        // let toSend = {
+        //     "id": idToSend[0]
+        // };
+        // res.send(toSend);
+        console.log(idToSend);
+    });
+    console.log("idToSend");
+    console.log(idToSend);
+    let toSend = {
+        "id": idToSend[0]
+    };
+    console.log(toSend);
+    console.log("Hereeeeeeeeeeee");
+    console.log(toSend);
+    res.send(toSend);
+    // new Img({
+    //     name: req.files[0].originalname,
+    //     buffer: req.files[0].buffer.toString('binary'),
+    //     mimetype: req.files[0].mimetype,
+    //     encoding: req.files[0].encoding
+    // }).save();
+    // console.log("Hereeeeeeeeeeee");
+    // var img_id = Img.find({name: req.files[0].originalname})
+    // console.log(toSend);
+    // console.log("Hereeeeeeeeeeee");
 }
 
 
