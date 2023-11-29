@@ -68,34 +68,80 @@ app.post("/recipe/", (req, res, next) => {
     });
 })
 
-app.post("/images", upload.array("images"), uploadFiles);
+app.post("/images", upload.array("images"), (req, res) => {
+    Img.findOne({name: req.files[0].originalname})
+    .then((name) => {
+        console.log("Here")
+        if(!name) {
+            let newImg = new Img({
+                    name: req.files[0].originalname,
+                    buffer: req.files[0].buffer.toString('binary'),
+                    mimetype: req.files[0].mimetype,
+                    encoding: req.files[0].encoding
+                });
+            let idSave = newImg._id.toString();
+            newImg.save();
+            let result = {"id": idSave};
+            console.log(result);
+            return res.send(result);
+            // console.log("Here")
+        } else {
+            return res.status(403).send("Have this image");
+        }
+    }).catch((err)=>{
+        console.log(err);
+    });
+});
 
-async function uploadFiles(req, res) {
-    let imgToSend = {
-        name: req.files[0].originalname,
-        buffer: req.files[0].buffer.toString('binary'),
-        mimetype: req.files[0].mimetype,
-        encoding: req.files[0].encoding
-    }
-    // let idToSend = [];
-    let saved = await Img.create(imgToSend)
-    let toSend = {
-        id: saved._id
-    };
-    console.log("Hereeeeeeeeeeee");
-    console.log(toSend);
-    // console.log(res);
-    return res.send(toSend);
-    // console.log(toSend);
-    // return res
+app.get("/images/:imageId", (req, res) => {
+
+});
+
+// function uploadFiles(req, res) {
+//     Img.findOne({name: req.files[0].originalname})
+//     .then((name) => {
+//         if(!name) {
+//             let newImg = new Img({
+//                     name: req.files[0].originalname,
+//                     buffer: req.files[0].buffer.toString('binary'),
+//                     mimetype: req.files[0].mimetype,
+//                     encoding: req.files[0].encoding
+//                 });
+//             let idSave = newImg._id.toString();
+//             newImg.save();
+//             console.log(idSave);
+//             return res.send({"id": idSave})
+//         } else {
+//             return res.status(403).send("Have this recipe");
+//         }
+//     }).catch((err)=>{
+//         console.log(err);
+//     });
+//     // let imgToSend = {
+//     //     name: req.files[0].originalname,
+//     //     buffer: req.files[0].buffer.toString('binary'),
+//     //     mimetype: req.files[0].mimetype,
+//     //     encoding: req.files[0].encoding
+//     // }
+//     // // let idToSend = [];
+//     // let saved = await Img.create(imgToSend)
+//     // let toSend = {
+//     //     id: saved._id
+//     // };
+//     // console.log("Hereeeeeeeeeeee");
+//     // console.log(toSend);
+//     // // console.log(res);
+//     // return res.send(toSend);
+//     // console.log(toSend);
+//     // return res
     
-    // new Img({
-    //     name: req.files[0].originalname,
-    //     buffer: req.files[0].buffer.toString('binary'),
-    //     mimetype: req.files[0].mimetype,
-    //     encoding: req.files[0].encoding
-    // }).save();
-}
+//     // new Img({
+//     //     name: req.files[0].originalname,
+//     //     buffer: req.files[0].buffer.toString('binary'),
+//     //     mimetype: req.files[0].mimetype,
+//     //     encoding: req.files[0].encoding
+//     // }).save();
+// }
 
 
 app.listen(port, () => console.log("Server listen"))

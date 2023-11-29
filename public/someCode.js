@@ -47,9 +47,11 @@ if (document.readyState !== "loading") {
   input.addEventListener('keydown', function(event){
     if (event.key === "Enter") {
       event.preventDefault();
+      let id = [];
       fetch("http://localhost:3000/recipe/" + input.value)
         .then(res => res.json())
         .then((result) => {
+          id.concat(result.images);
           console.log("heeeeeeeeeeeeeeeere");
           console.log(result);
           var title = document.createElement("H1");
@@ -76,6 +78,14 @@ if (document.readyState !== "loading") {
           }
         })
       }
+      for (let i=0; i<this.id.length; i++) {
+        fetch("http://localhost:3000/images/:" + id[i], {
+          method: "пуе",
+          header: {
+            "Content-Type": "multipart/form-data"
+          }
+        });
+      }
   })
 
   const addIngr = document.getElementById("add-ingredient");
@@ -101,52 +111,59 @@ if (document.readyState !== "loading") {
     formData.append("name", "smth");
     formData.append("images", save[0]);
     let img_id = [];
-    await fetch("http://localhost:3000/images", {
+    let response = await fetch("http://localhost:3000/images", {
             method: "post",
             body: formData,
             header: {
-              "Content-Type": "multipart/form-data"
+              "Content-Type": "multipart/form-data",
+              "Content-Disposition": "inline"
+            }
+        });
+      let data = response.json();
+      await data.then((value) => {
+        img_id.push(value.id);
+        console.log(img_id);
+      });
+      console.log(data);
+      console.log(img_id);
+        // .then((result) => {
+        //   // console.log(result);
+        //   console.log(result);
+        //   result.json();
+        // })
+        // .then((resJs) => {
+        //   console.log(resJs);
+        //   // img_id.push(resJs.id);
+        // })
+    let ids = [];
+    console.log(ind);
+    for(let i = 0; i<ind; i++) {
+      const listOfCheck = document.getElementById("check" + i.toString());
+      if (listOfCheck.checked == true) {
+        ids.push(listOptions[i]);
+      }
+    }
+    let reqToSend = {
+      name: nameDish.value, 
+      instructions: instr,
+      ingredients: ingr,
+      categories: ids,
+      images: img_id 
+    }
+    fetch("http://localhost:3000/recipe/", {
+            method: "post",
+            headers: {
+                "Content-type": "application/json"
             },
-            dataType: "json"
+            body: JSON.stringify(reqToSend)
         })
-        .then(result => {
-          // console.log(result);
-          result.text();
-          console.log(result);
-        })
-        .then(resJs => {
-          console.log(resJs);
-          img_id.push(resJs.id);
-        })
-    // let ids = [];
-    // console.log(ind);
-    // for(let i = 0; i<ind; i++) {
-    //   const listOfCheck = document.getElementById("check" + i.toString());
-    //   if (listOfCheck.checked == true) {
-    //     ids.push(listOptions[i]);
-    //   }
-    // }
-    // let reqToSend = {
-    //   name: nameDish.value, 
-    //   instructions: instr,
-    //   ingredients: ingr,
-    //   categories: ids,
-    //   images: img_id 
-    // }
-    // fetch("http://localhost:3000/recipe/", {
-    //         method: "post",
-    //         headers: {
-    //             "Content-type": "application/json"
-    //         },
-    //         body: JSON.stringify(reqToSend)
-    //     })
-    //     // .then((res) => {
-    //     //   res.json;
-    //     //   instr = [];
-    //     //   ingr = [];
-    //     // })
-    // instr = [];
-    // ingr = [];
+        // .then((res) => {
+        //   res.json;
+        //   instr = [];
+        //   ingr = [];
+        // })
+    instr = [];
+    ingr = [];
   })
 
   imgIn.addEventListener("change", event => {
