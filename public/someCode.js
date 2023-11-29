@@ -1,3 +1,4 @@
+const fs = require('fs');
 if (document.readyState !== "loading") {
     console.log("Here!1");
     initCode();
@@ -44,16 +45,16 @@ if (document.readyState !== "loading") {
   const input = document.getElementById("search");
   const cont = document.getElementById("rec");
 
-  input.addEventListener('keydown', function(event){
+  input.addEventListener('keydown', async function(event){
+    let id = [];
     if (event.key === "Enter") {
       event.preventDefault();
-      let id = [];
-      fetch("http://localhost:3000/recipe/" + input.value)
+      await fetch("http://localhost:3000/recipe/" + input.value)
         .then(res => res.json())
         .then((result) => {
-          id.concat(result.images);
+          id = result.images;
           console.log("heeeeeeeeeeeeeeeere");
-          console.log(result);
+          console.log(id);
           var title = document.createElement("H1");
           title.innerText = result.name;
           title.id = "ti";
@@ -76,21 +77,31 @@ if (document.readyState !== "loading") {
             ulistIns.innerText = result.instructions[el];
             cont.appendChild(ulistIns);
           }
+        });
+      console.log("sdfgsjdgfks")
+      console.log(id);
+      console.log("sdfgsjdgfks")
+      for (let i=0; i<id.length; i++) {
+        fetch("http://localhost:3000/images/" + id[i], {
+          method: "get",
+          header: {
+            "Content-Disposition": "inline"
+          }
+        })
+        .then((result) => result.json())
+        .then((img) => {
+          console.log(img.buffer);
+          console.log(img.buffer.data);
+          let image_urls = fs.writeFileSync(img.name, img.buffer.data);
+          console.log(image_urls);
         })
       }
-      for (let i=0; i<this.id.length; i++) {
-        fetch("http://localhost:3000/images/:" + id[i], {
-          method: "пуе",
-          header: {
-            "Content-Type": "multipart/form-data"
-          }
-        });
-      }
+    }
   })
 
   const addIngr = document.getElementById("add-ingredient");
   const addInstr = document.getElementById("add-instruction");
-  const sub = document.getElementById("submit")
+  const sub = document.getElementById("submit");
 
   addIngr.addEventListener("click", function(){
     const newIngr = document.getElementById("ingredients-text");
@@ -116,16 +127,12 @@ if (document.readyState !== "loading") {
             body: formData,
             header: {
               "Content-Type": "multipart/form-data",
-              "Content-Disposition": "inline"
             }
         });
       let data = response.json();
       await data.then((value) => {
         img_id.push(value.id);
-        console.log(img_id);
       });
-      console.log(data);
-      console.log(img_id);
         // .then((result) => {
         //   // console.log(result);
         //   console.log(result);
@@ -136,7 +143,6 @@ if (document.readyState !== "loading") {
         //   // img_id.push(resJs.id);
         // })
     let ids = [];
-    console.log(ind);
     for(let i = 0; i<ind; i++) {
       const listOfCheck = document.getElementById("check" + i.toString());
       if (listOfCheck.checked == true) {
@@ -176,7 +182,5 @@ if (document.readyState !== "loading") {
     //   mimetype: files[0].type,
     //   encoding: encoding
     // }
-    console.log(files);
     save.push(files[0]);
-    console.log(save);
   })
