@@ -127,7 +127,7 @@ if (document.readyState !== "loading") {
     console.log("here");
     const formData = new FormData();
     formData.append("name", "smth");
-    console.log(save);
+    // console.log(save);
     for (let i=0; i<save.length; i++) {
       formData.append("images", save[i]);
     }
@@ -173,6 +173,6 @@ if (document.readyState !== "loading") {
   imgIn.addEventListener("change", event => {
     save = [];
     const files = event.target.files;
-    console.log(files);
+    // console.log(files);
     save= files;
   })

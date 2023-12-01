@@ -69,7 +69,7 @@ app.post("/recipe/", (req, res, next) => {
 })
 
 app.post("/images", upload.array("images"), async (req, res) => {
-    console.log(req.files);
+    // console.log(req.files);
     // console.log(req.body);
     let idSave = [];
     for (let i=0; i<req.files.length; i++) {
@@ -83,7 +83,7 @@ app.post("/images", upload.array("images"), async (req, res) => {
                     encoding: req.files[i].encoding
                 });
                 idSave.push(newImg._id.toString());
-                console.log(idSave)
+                // console.log(idSave)
                 newImg.save();
             } else {
                 return res.status(403).send("Have this image");
@@ -93,14 +93,14 @@ app.post("/images", upload.array("images"), async (req, res) => {
         });
     }
     let result = {"id": idSave};
-    console.log(result)
+    // console.log(result)
     return res.send(result);
 });
 
 app.get("/images/:imageId", (req, res) => {
     Img.findById(req.params.imageId)
     .then((result) => {
-        console.log("паппапапапа");
+        // console.log("паппапапапа");
         res.setHeader("Content-Disposition", "inline" + ";" + 'filename=' + result.name);
         res.setHeader("Content-Type", result.mimetype);
         return res.send(result.buffer);
