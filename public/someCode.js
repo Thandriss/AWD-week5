@@ -86,26 +86,15 @@ if (document.readyState !== "loading") {
       console.log(id);
       console.log("sdfgsjdgfks")
       for (let i=0; i<id.length; i++) {
-        fetch("http://localhost:3000/images/" + id[i])
-        .then((result) => result.json())
-        .then((img) => {
-          console.log(img.buffer);
-          console.log(img.buffer.data);
-          let img_save = document.getElementById("images")
-          let img_cont = document.createElement("IMG");
-          console.log(img.buffer.byte);
-          const base64String = toBase64(img.buffer.data);
-          console.log(base64String);
-          // let binary = img.buffer.data.toString("base64"); //or Buffer.from(data, 'binary')
-          // console.log(binary);
-          let val = new Blob([base64String], { type: 'image/png' });
-          console.log(val);
-          let link = URL.createObjectURL(val).toString();
-          console.log(link);
-          // img_cont.onload = () => URL.revokeObjectURL(link);
-          img_cont.src = link;//`data:image/png;base64,${base64String}`;
-          img_save.appendChild(img_cont);
-        })
+        let answer  = await fetch("http://localhost:3000/images/" + id[i]);
+        let img = await answer.blob();
+        let img_save = document.getElementById("images")
+        let img_cont = document.createElement("IMG");
+        console.log(img);
+        let link = URL.createObjectURL(img).toString();
+        console.log(link);
+        img_cont.src = link;
+        img_save.appendChild(img_cont);
       }
     }
   })

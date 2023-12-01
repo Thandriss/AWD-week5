@@ -74,7 +74,7 @@ app.post("/images", upload.array("images"), (req, res) => {
         if(!name) {
             let newImg = new Img({
                     name: req.files[0].originalname,
-                    buffer: req.files[0].buffer.toString('binary'),
+                    buffer: req.files[0].buffer,
                     mimetype: req.files[0].mimetype,
                     encoding: req.files[0].encoding
                 });
@@ -94,9 +94,10 @@ app.get("/images/:imageId", (req, res) => {
     Img.findById(req.params.imageId)
     .then((result) => {
         console.log("паппапапапа");
-        res.setHeader("Content-Disposition", "inline" + ";" + 'filename=' + result.name)
-        // console.log(result);
-        return res.send(result);
+        res.setHeader("Content-Disposition", "inline" + ";" + 'filename=' + result.name);
+        res.setHeader("Content-Type", result.mimetype);
+        console.log(result);
+        return res.send(result.buffer);
     })
 });
 
