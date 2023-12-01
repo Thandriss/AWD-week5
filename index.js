@@ -9,8 +9,8 @@ const mongoDB = "mongodb://127.0.0.1:27017/testdb";
 const Recipes = require("./models/Recipes");
 const Cat = require("./models/Category");
 const Img = require("./models/Images");
-const multer  = require('multer')
-const storage = multer.memoryStorage()
+const multer  = require('multer');
+const storage = multer.memoryStorage();
 const upload = multer({ storage: storage })
 // const upload = multer({ dest: './public/data/uploads/' })
 mongoose.connect(mongoDB);
@@ -68,26 +68,33 @@ app.post("/recipe/", (req, res, next) => {
     });
 })
 
-app.post("/images", upload.array("images"), (req, res) => {
-    Img.findOne({name: req.files[0].originalname})
-    .then((name) => {
-        if(!name) {
-            let newImg = new Img({
-                    name: req.files[0].originalname,
-                    buffer: req.files[0].buffer,
-                    mimetype: req.files[0].mimetype,
-                    encoding: req.files[0].encoding
+app.post("/images", upload.array("images"), async (req, res) => {
+    console.log(req.files);
+    // console.log(req.body);
+    let idSave = [];
+    for (let i=0; i<req.files.length; i++) {
+        await Img.findOne({name: req.files[i].originalname})
+        .then((name) => {
+            if(!name) {
+                let newImg = new Img({
+                    name: req.files[i].originalname,
+                    buffer: req.files[i].buffer,
+                    mimetype: req.files[i].mimetype,
+                    encoding: req.files[i].encoding
                 });
-            let idSave = newImg._id.toString();
-            newImg.save();
-            let result = {"id": idSave};
-            return res.send(result);
-        } else {
-            return res.status(403).send("Have this image");
-        }
-    }).catch((err)=>{
-        console.log(err);
-    });
+                idSave.push(newImg._id.toString());
+                console.log(idSave)
+                newImg.save();
+            } else {
+                return res.status(403).send("Have this image");
+            }
+        }).catch((err)=>{
+            console.log(err);
+        });
+    }
+    let result = {"id": idSave};
+    console.log(result)
+    return res.send(result);
 });
 
 app.get("/images/:imageId", (req, res) => {
@@ -96,7 +103,6 @@ app.get("/images/:imageId", (req, res) => {
         console.log("паппапапапа");
         res.setHeader("Content-Disposition", "inline" + ";" + 'filename=' + result.name);
         res.setHeader("Content-Type", result.mimetype);
-        console.log(result);
         return res.send(result.buffer);
     })
 });

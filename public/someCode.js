@@ -124,9 +124,13 @@ if (document.readyState !== "loading") {
   let save = [];
 
   sub.addEventListener("click", async function() {
+    console.log("here");
     const formData = new FormData();
     formData.append("name", "smth");
-    formData.append("images", save[0]);
+    console.log(save);
+    for (let i=0; i<save.length; i++) {
+      formData.append("images", save[i]);
+    }
     let img_id = [];
     let response = await fetch("http://localhost:3000/images", {
             method: "post",
@@ -136,18 +140,11 @@ if (document.readyState !== "loading") {
             }
         });
       let data = response.json();
+      console.log(data);
       await data.then((value) => {
-        img_id.push(value.id);
+        console.log(value.id);
+        img_id=value.id;
       });
-        // .then((result) => {
-        //   // console.log(result);
-        //   console.log(result);
-        //   result.json();
-        // })
-        // .then((resJs) => {
-        //   console.log(resJs);
-        //   // img_id.push(resJs.id);
-        // })
     let ids = [];
     for(let i = 0; i<ind; i++) {
       const listOfCheck = document.getElementById("check" + i.toString());
@@ -169,11 +166,6 @@ if (document.readyState !== "loading") {
             },
             body: JSON.stringify(reqToSend)
         })
-        // .then((res) => {
-        //   res.json;
-        //   instr = [];
-        //   ingr = [];
-        // })
     instr = [];
     ingr = [];
   })
@@ -181,12 +173,6 @@ if (document.readyState !== "loading") {
   imgIn.addEventListener("change", event => {
     save = [];
     const files = event.target.files;
-    // console.log(files[0]);
-    // let imgToSend = {
-    //   name: files[0].name,
-    //   buffer: files[0].buffer,
-    //   mimetype: files[0].type,
-    //   encoding: encoding
-    // }
-    save.push(files[0]);
+    console.log(files);
+    save= files;
   })
