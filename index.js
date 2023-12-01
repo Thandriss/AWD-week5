@@ -94,6 +94,7 @@ app.get("/images/:imageId", (req, res) => {
     Img.findById(req.params.imageId)
     .then((result) => {
         console.log("паппапапапа");
+        res.setHeader("Content-Disposition", "inline" + ";" + 'filename=' + result.name)
         // console.log(result);
         return res.send(result);
     })

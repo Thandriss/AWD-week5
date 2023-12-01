@@ -1,4 +1,4 @@
-const fs = require('fs');
+
 if (document.readyState !== "loading") {
     console.log("Here!1");
     initCode();
@@ -52,6 +52,10 @@ if (document.readyState !== "loading") {
       await fetch("http://localhost:3000/recipe/" + input.value)
         .then(res => res.json())
         .then((result) => {
+          cont.innerHTML = ""
+          let img_div = document.createElement("DIV");
+          img_div.id = "images"; 
+          cont.appendChild(img_div);
           id = result.images;
           console.log("heeeeeeeeeeeeeeeere");
           console.log(id);
@@ -82,22 +86,35 @@ if (document.readyState !== "loading") {
       console.log(id);
       console.log("sdfgsjdgfks")
       for (let i=0; i<id.length; i++) {
-        fetch("http://localhost:3000/images/" + id[i], {
-          method: "get",
-          header: {
-            "Content-Disposition": "inline"
-          }
-        })
+        fetch("http://localhost:3000/images/" + id[i])
         .then((result) => result.json())
         .then((img) => {
           console.log(img.buffer);
           console.log(img.buffer.data);
-          let image_urls = fs.writeFileSync(img.name, img.buffer.data);
-          console.log(image_urls);
+          let img_save = document.getElementById("images")
+          let img_cont = document.createElement("IMG");
+          console.log(img.buffer.byte);
+          const base64String = toBase64(img.buffer.data);
+          console.log(base64String);
+          // let binary = img.buffer.data.toString("base64"); //or Buffer.from(data, 'binary')
+          // console.log(binary);
+          let val = new Blob([base64String], { type: 'image/png' });
+          console.log(val);
+          let link = URL.createObjectURL(val).toString();
+          console.log(link);
+          // img_cont.onload = () => URL.revokeObjectURL(link);
+          img_cont.src = link;//`data:image/png;base64,${base64String}`;
+          img_save.appendChild(img_cont);
         })
       }
     }
   })
+
+  function toBase64(arr) {
+    return btoa(
+       arr.reduce((data, byte) => data + String.fromCharCode(byte), '')
+    );
+ }
 
   const addIngr = document.getElementById("add-ingredient");
   const addInstr = document.getElementById("add-instruction");
