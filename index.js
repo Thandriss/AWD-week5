@@ -11,22 +11,17 @@ const Cat = require("./models/Category");
 const Img = require("./models/Images");
 const multer  = require('multer');
 const storage = multer.memoryStorage();
-const upload = multer({ storage: storage })
-// const upload = multer({ dest: './public/data/uploads/' })
+const upload = multer({ storage: storage });
 mongoose.connect(mongoDB);
 console.log(mongoose.connection.readyState);
 console.log("CONNECT");
 mongoose.Promise = Promise;
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "MongoDB connection error"));
-// let listValue = [];
 const images = [];
 app.use(express.json()) ;
 app.use(express.urlencoded({ extended: true })) ;
 
-// app.get('/', (req, res) => {
-//     res.sendFile(__dirname + '/index.html');
-// });
 
 app.use(express.static(path.join(__dirname, "public")));
 
@@ -43,13 +38,11 @@ console.log(mongoose.connection.readyState);
 app.get("/categories", (req, res) =>{
     Cat.find({})
     .then(result => {
-        // console.log(result);
         return res.json(result);
     })
 })
 
 app.post("/recipe/", (req, res, next) => {
-    // console.log(req.body);
     Recipes.findOne({name: req.body.name})
     .then((name) =>{
         if(!name) {
@@ -69,8 +62,6 @@ app.post("/recipe/", (req, res, next) => {
 })
 
 app.post("/images", upload.array("images"), async (req, res) => {
-    // console.log(req.files);
-    // console.log(req.body);
     let idSave = [];
     for (let i=0; i<req.files.length; i++) {
         await Img.findOne({name: req.files[i].originalname})
@@ -83,7 +74,6 @@ app.post("/images", upload.array("images"), async (req, res) => {
                     encoding: req.files[i].encoding
                 });
                 idSave.push(newImg._id.toString());
-                // console.log(idSave)
                 newImg.save();
             } else {
                 return res.status(403).send("Have this image");
@@ -93,14 +83,12 @@ app.post("/images", upload.array("images"), async (req, res) => {
         });
     }
     let result = {"id": idSave};
-    // console.log(result)
     return res.send(result);
 });
 
 app.get("/images/:imageId", (req, res) => {
     Img.findById(req.params.imageId)
     .then((result) => {
-        // console.log("паппапапапа");
         res.setHeader("Content-Disposition", "inline" + ";" + 'filename=' + result.name);
         res.setHeader("Content-Type", result.mimetype);
         return res.send(result.buffer);
