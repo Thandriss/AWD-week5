@@ -49,39 +49,40 @@ if (document.readyState !== "loading") {
     let id = [];
     if (event.key === "Enter") {
       event.preventDefault();
-      await fetch("http://localhost:3000/recipe/" + input.value)
-        .then(res => res.json())
-        .then((result) => {
-          cont.innerHTML = ""
-          let img_div = document.createElement("DIV");
-          img_div.id = "images"; 
-          cont.appendChild(img_div);
-          id = result.images;
-          console.log("heeeeeeeeeeeeeeeere");
-          console.log(id);
-          var title = document.createElement("H1");
-          title.innerText = result.name;
-          title.id = "ti";
-          cont.appendChild(title);
-          var ingTitle = document.createElement("H2");
-          ingTitle.innerText = "Ingredients";
-          ingTitle.id = "ingr-ti";
-          cont.appendChild(ingTitle);
-          for(el in result.ingredients) {
-            var ulist = document.createElement("UL");
-            ulist.innerText = result.ingredients[el];
-            cont.appendChild(ulist);
-          }
-          var instTitle = document.createElement("H2");
-          instTitle.innerText = "Instructions"
-          instTitle.id = "inst-ti";
-          cont.appendChild(instTitle);
-          for(el in result.instructions) {
-            var ulistIns = document.createElement("UL");
-            ulistIns.innerText = result.instructions[el];
-            cont.appendChild(ulistIns);
-          }
-        });
+      let response = await fetch("http://localhost:3000/recipe/" + input.value)
+      let res = await response.json()
+      console.log(res);
+        // .then((result) => {
+      cont.innerHTML = ""
+      let img_div = document.createElement("DIV");
+      img_div.id = "images"; 
+      cont.appendChild(img_div);
+      id = res.images;
+      console.log("heeeeeeeeeeeeeeeere");
+      console.log(id);
+      var title = document.createElement("H1");
+      title.innerText = res.name;
+      title.id = "ti";
+      cont.appendChild(title);
+      var ingTitle = document.createElement("H2");
+      ingTitle.innerText = "Ingredients";
+      ingTitle.id = "ingr-ti";
+      cont.appendChild(ingTitle);
+        for(el in res.ingredients) {
+          var ulist = document.createElement("UL");
+          ulist.innerText = res.ingredients[el];
+          cont.appendChild(ulist);
+        }
+        var instTitle = document.createElement("H2");
+        instTitle.innerText = "Instructions"
+        instTitle.id = "inst-ti";
+        cont.appendChild(instTitle);
+        for(el in res.instructions) {
+          var ulistIns = document.createElement("UL");
+          ulistIns.innerText = res.instructions[el];
+          cont.appendChild(ulistIns);
+        }
+        // });
       console.log("sdfgsjdgfks")
       console.log(id);
       console.log("sdfgsjdgfks")
